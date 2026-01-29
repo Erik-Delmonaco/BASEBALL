@@ -4,13 +4,15 @@ import pandas as pd
 conn = sqlite3.connect('baseball.db')
 cursor = conn.cursor()
 query = """
-    SELECT playerID, yearID, teamID, HR
+    SELECT teamID, sum(HR) as seasonHR
     FROM Batting
-    WHERE yearID = 1976 and teamID LIKE 'P%'
+    WHERE yearID = 2025
+    GROUP BY teamID
+    ORDER BY seasonHR desc
 """
 cursor.execute(query)
 records = cursor.fetchall()
 conn.close()
 
-records_df = pd.DataFrame(records,columns = ['playerID', 'yearID', 'teamID', 'HR'])
+records_df = pd.DataFrame(records,columns = ["teamID","seasonHR"])
 print(records_df)
